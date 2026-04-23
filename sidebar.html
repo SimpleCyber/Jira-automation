@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jira Helper</title>
+  <link rel="stylesheet" href="sidebar.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-brand">
+      <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+        <rect x="9" y="3" width="6" height="4" rx="1"/>
+        <path d="M9 14l2 2 4-4"/>
+      </svg>
+      <h1>Jira Helper</h1>
+    </div>
+    <button class="header-badge" id="copy-prompt-btn" style="cursor:pointer; border:none;" title="Copy prompt for AI chatbot">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 12px; height: 12px; margin-right: 4px; display: inline-block; vertical-align: middle;">
+        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+      </svg>
+      <span style="vertical-align: middle;">Copy Prompt</span>
+    </button>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main">
+    <!-- Input Section -->
+    <section class="section" id="input-section">
+      <div class="section-header">
+        <h2>Paste Test Scripts</h2>
+        <button class="btn-icon" id="clear-btn" title="Clear">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+      <textarea id="script-input" placeholder="Paste your test case steps here...
+
+Example format:
+
+**Steps:**
+1. Open POST API
+2. Enter valid JSON body
+3. Click Execute
+
+**Test Data:**
+{&quot;name&quot;: &quot;Test&quot;, &quot;id&quot;: 1}
+
+**Expected Result:**
+* Status Code: 201 Created
+* Record saved"></textarea>
+      <div class="input-actions">
+        <button class="btn btn-primary" id="parse-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14,2 14,8 20,8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+          Parse Steps
+        </button>
+        <span class="step-count" id="step-count"></span>
+      </div>
+    </section>
+
+    <!-- Preview Section (hidden until parsed) -->
+    <section class="section" id="preview-section" style="display:none;">
+      <div class="section-header">
+        <h2>Parsed Steps</h2>
+        <button class="btn-icon" id="edit-btn" title="Edit Script">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/>
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/>
+          </svg>
+        </button>
+      </div>
+      <div class="steps-list" id="steps-list"></div>
+    </section>
+
+    <!-- Settings -->
+    <section class="section settings-section">
+      <div class="setting-row">
+        <label for="delay-slider">Step Delay</label>
+        <div class="setting-control">
+          <input type="range" id="delay-slider" min="500" max="5000" step="250" value="1500">
+          <span id="delay-value">1.5s</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fill Button -->
+    <section class="section" id="fill-section" style="display:none;">
+      <button class="btn btn-fill" id="fill-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        Fill Steps in Zephyr Scale
+      </button>
+      <button class="btn btn-stop" id="stop-btn" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="6" y="6" width="12" height="12" rx="1"/>
+        </svg>
+        Stop Filling
+      </button>
+    </section>
+
+    <!-- Progress Log -->
+    <section class="section" id="log-section" style="display:none;">
+      <div class="section-header">
+        <h2>Progress</h2>
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+      </div>
+      <div class="log-container" id="log-container"></div>
+    </section>
+  </main>
+
+  <script src="sidebar.js"></script>
+</body>
+</html>

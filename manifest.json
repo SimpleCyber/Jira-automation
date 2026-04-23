@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Jira Helper – Zephyr Scale Filler",
+  "version": "1.0.0",
+  "description": "Paste test scripts and auto-fill Zephyr Scale test case steps in Jira",
+  "permissions": ["activeTab", "sidePanel", "storage", "webNavigation"],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "side_panel": {
+    "default_path": "sidebar.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ],
+  "action": {
+    "default_title": "Jira Helper",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
