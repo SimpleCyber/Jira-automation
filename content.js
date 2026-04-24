@@ -365,16 +365,21 @@ async function fillField(row, selector, content) {
   document.execCommand('insertHTML', false, textToHtml(content));
   await sleep(200);
 
-  // CRITICAL FIX: Simulate an actual human typing a space and deleting it. 
+  // CRITICAL FIX: Simulate an actual human typing two spaces and deleting them. 
   // This physically forces Froala Editor and React to trigger their internal onChange listeners
   // and sync the dirty element's innerHTML into the virtual DOM / React state.
-  document.execCommand('insertText', false, ' ');
+  // We use two spaces to provide a larger buffer, preventing accidental deletion of the real content.
+  document.execCommand('insertText', false, '  ');
   await sleep(50);
   
   const backspaceInit = { key: 'Backspace', code: 'Backspace', keyCode: 8, which: 8, bubbles: true, cancelable: true };
   editable.dispatchEvent(new KeyboardEvent('keydown', backspaceInit));
   editable.dispatchEvent(new KeyboardEvent('keypress', backspaceInit));
+  
+  // Delete the two spaces
   document.execCommand('delete', false, null);
+  document.execCommand('delete', false, null);
+  
   editable.dispatchEvent(new KeyboardEvent('keyup', backspaceInit));
   await sleep(50);
 

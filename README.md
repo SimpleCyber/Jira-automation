@@ -68,16 +68,11 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://github.com/simplecyber/jira-helper)
 
-The **Jira Helper – Zephyr Scale Filler** is a powerful Chrome extension designed to eliminate the tedious manual entry of test case steps into Jira's Zephyr Scale. Often, QA engineers generate structured test case steps from AI tools or external editors and then spend excessive time copy-pasting them into the Zephyr Scale interface step by step. 
+The **Jira Helper – Zephyr Scale Filler** is a Chrome extension that automates adding test cases into Jira's Zephyr Scale. Just paste your AI-generated or manually written test steps into the sidebar, and the extension will automatically populate the step-by-step editor for you!
 
-This extension features a simple, persistent sidebar where users can paste multi-step test scripts in bulk. It intelligently parses the content—including the step description, test data, and expected results—and acts directly on the active Jira frame to automate the process of adding those steps inside the Zephyr Scale editor.
-
-Here's why you should use it:
-* Focus your time on designing quality test cases rather than manual data entry.
-* Eliminate tedious back-and-forth window-switching and repetitive clicks.
-* Seamlessly integrates AI-generated markdown steps directly into Jira.
-
-Use the `manifest.json` and start automating your Zephyr inputs today!
+* **Save Time:** Stop copy-pasting individual steps.
+* **Bulk Import:** Paste multiple tests at once.
+* **AI-Ready:** Seamlessly parses Markdown test scripts.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

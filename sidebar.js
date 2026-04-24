@@ -178,23 +178,93 @@ function renderSteps() {
     card.innerHTML = `
       <div class="step-card-header">
         <span class="step-number">${i + 1}</span>
-        <span class="step-card-title">${truncate(step.step, 60)}</span>
+        <textarea class="editable-text step-card-title" data-index="${i}" data-field="step" rows="1">${escapeHtml(step.step)}</textarea>
+        <svg class="expand-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+          <path d="M6 9l6 6 6-6"/>
+        </svg>
       </div>
       <div class="step-card-fields">
         <div class="step-field">
           <span class="step-field-label">Test Data:</span>
-          <span class="step-field-value ${step.testData ? '' : 'empty'}">
-            ${step.testData ? truncate(step.testData, 50) : '(none)'}
-          </span>
+          <textarea class="editable-text step-field-value ${step.testData ? '' : 'empty'}" data-index="${i}" data-field="testData" rows="1">${escapeHtml(step.testData || '(none)')}</textarea>
         </div>
         <div class="step-field">
           <span class="step-field-label">Expected:</span>
-          <span class="step-field-value ${step.expectedResult ? '' : 'empty'}">
-            ${step.expectedResult ? truncate(step.expectedResult, 50) : '(none)'}
-          </span>
+          <textarea class="editable-text step-field-value ${step.expectedResult ? '' : 'empty'}" data-index="${i}" data-field="expectedResult" rows="1">${escapeHtml(step.expectedResult || '(none)')}</textarea>
         </div>
       </div>
     `;
+
+    const textareas = card.querySelectorAll('textarea');
+    
+    // Auto-resize helper
+    const autoResize = (ta) => {
+      if (card.classList.contains('expanded')) {
+        ta.style.height = '1px'; // Shrink first so scrollHeight accurately measures wrapped content
+        ta.style.height = ta.scrollHeight + 'px';
+      } else {
+        ta.style.height = ''; // Reset to CSS default
+      }
+    };
+
+    // Toggle expansion
+    card.addEventListener('click', (e) => {
+      if (e.target.tagName === 'TEXTAREA') return;
+      
+      const isExpanded = card.classList.contains('expanded');
+      
+      // Close all other cards and reset their textareas
+      document.querySelectorAll('.step-card').forEach(c => {
+        c.classList.remove('expanded');
+        c.querySelectorAll('textarea').forEach(ta => ta.style.height = '');
+      });
+      
+      if (!isExpanded) {
+        card.classList.add('expanded');
+        // Wait for browser layout to catch up, then set height
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            textareas.forEach(autoResize);
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            
+            // Re-check after slight delay in case fonts/layout shifted text wrapping
+            setTimeout(() => {
+              textareas.forEach(autoResize);
+            }, 100);
+          }, 10);
+        });
+      }
+    });
+
+    // Handle editing and auto-resize
+    textareas.forEach(ta => {
+      ta.addEventListener('input', (e) => {
+        const field = ta.dataset.field;
+        const index = parseInt(ta.dataset.index);
+        const value = ta.value;
+
+        // Sync back to parsedSteps
+        parsedSteps[index][field] = value;
+        
+        // Handle '(none)' placeholder logic for labels
+        if (field !== 'step') {
+           ta.classList.toggle('empty', !value || value === '(none)');
+        }
+
+        autoResize(ta);
+      });
+      
+      ta.addEventListener('click', (e) => {
+        if (!card.classList.contains('expanded')) {
+          // If card is collapsed, clicking textarea should expand card first
+          card.click();
+          e.preventDefault();
+        } else {
+          e.stopPropagation();
+        }
+      });
+    });
+
     stepsList.appendChild(card);
   });
 }
