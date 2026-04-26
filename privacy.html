@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Jira Helper</title>
+    <meta name="description" content="Privacy Policy for the Jira Helper - Zephyr Scale Filler Chrome Extension.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0052CC; /* Atlassian Blue */
+            --primary-hover: #0047B3;
+            --bg-color: #FFFFFF;
+            --bg-secondary: #F4F5F7;
+            --text-main: #172B4D;
+            --text-muted: #42526E;
+            --border-color: #DFE1E6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Navbar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Page Header */
+        .page-header {
+            padding: 8rem 5% 4rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.125rem;
+        }
+
+        /* Policy Content */
+        .policy-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 5%;
+        }
+
+        .policy-section {
+            margin-bottom: 3rem;
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .policy-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.04);
+        }
+
+        .policy-section h2 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .policy-section p, .policy-section li {
+            margin-bottom: 1rem;
+            color: var(--text-muted);
+        }
+
+        .policy-section ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .policy-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #FAFBFC;
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 5%;
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .policy-section { padding: 1.5rem; }
+            .footer-content { flex-direction: column; gap: 1rem; }
+        }
+
+        /* Subtle animations */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#0052CC"/>
+                <path d="M2 17L12 22L22 17" stroke="#0052CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M2 12L12 17L22 12" stroke="#0052CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Jira Helper
+        </a>
+        <div class="nav-links">
+            <a href="index.html#features">Features</a>
+            <a href="index.html#how-it-works">How it works</a>
+            <a href="privacy.html" style="color: var(--primary); font-weight: 600;">Privacy</a>
+        </div>
+    </nav>
+
+    <div class="page-header animate-slide-up">
+        <h1>Privacy Policy</h1>
+        <p>Transparency and data protection for Jira Helper</p>
+    </div>
+
+    <div class="policy-container animate-slide-up" style="animation-delay: 0.1s;">
+        
+        <div class="policy-section">
+            <h2>🛡️ 1. Introduction</h2>
+            <p>Welcome to the Privacy Policy for <strong>Jira Helper – Zephyr Scale Filler</strong> ("we," "our," or "the extension"). We are committed to protecting your privacy and ensuring you have complete visibility over how the extension handles your data.</p>
+            <p>Our core philosophy is simple: <strong>Your data stays on your device. We do not collect, transmit, or sell any personal information or test data.</strong></p>
+        </div>
+
+        <div class="policy-section">
+            <h2>📦 2. Data Collection & Processing</h2>
+            <p>Jira Helper is designed to operate entirely locally within your browser. We adhere to strict data minimization principles:</p>
+            <ul>
+                <li><strong>No Telemetry or Tracking:</strong> We do not track your usage, behavior, or interactions with the extension.</li>
+                <li><strong>No External Servers:</strong> The extension does not communicate with any external servers, databases, or third-party APIs (other than the Jira APIs invoked directly from your authenticated Jira tab).</li>
+                <li><strong>Local Test Data:</strong> Any test scripts, step descriptions, or expected results you paste into the extension are processed locally in your browser memory and are never sent to us.</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>🔑 3. Explanation of Permissions</h2>
+            <p>To provide its automated auto-fill functionality, Jira Helper requires the following specific Chrome extension permissions:</p>
+            <ul>
+                <li><strong>Host Permissions (<code>*://*.atlassian.net/*</code>):</strong> Required strictly to interact with the DOM of your Jira Zephyr Scale test cases. This allows the extension to automatically type your test steps into the inputs and trigger "Add Step" events on your behalf.</li>
+                <li><strong><code>activeTab</code> & <code>webNavigation</code>:</strong> Used to detect when you are actively on a Zephyr Scale page and to gracefully handle page refreshes or iframe loading.</li>
+                <li><strong><code>sidePanel</code>:</strong> Allows the extension to open its user interface in a convenient, persistent side panel while you work in Jira.</li>
+                <li><strong><code>storage</code>:</strong> Used exclusively to save your local extension preferences (like custom input delays). This data is stored locally in your browser and is never synced to external servers.</li>
+            </ul>
+        </div>
+
+        <div class="policy-section">
+            <h2>🔒 4. Security & Compliance</h2>
+            <p>Because the extension operates solely on the client side, the security of your test data is governed by your own browser and machine security. It leverages your existing Jira authentication session and cannot bypass any Atlassian security protocols.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>🔄 5. Changes to this Policy</h2>
+            <p>We may update this Privacy Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. Any changes will be posted on this page.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>📧 6. Contact Us</h2>
+            <p>If you have any questions or concerns about this Privacy Policy or the data practices of Jira Helper, please reach out via our GitHub repository or contact the developer directly at <strong>satyamok03@gmail.com</strong>.</p>
+        </div>
+
+        <div class="last-updated">
+            Last Updated: April 2026
+        </div>
+
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 Jira Helper – Zephyr Scale Filler. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="https://github.com/simplecyber/jira-helper" target="_blank">GitHub</a>
+                <a href="index.html">Home</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

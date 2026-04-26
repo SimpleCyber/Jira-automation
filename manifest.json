@@ -5,7 +5,7 @@
   "description": "Paste test scripts and auto-fill Zephyr Scale test case steps in Jira",
   "permissions": ["activeTab", "sidePanel", "storage", "webNavigation"],
   "host_permissions": [
-    "<all_urls>"
+    "*://*.atlassian.net/*"
   ],
   "side_panel": {
     "default_path": "sidebar.html"
@@ -16,7 +16,7 @@
   "content_scripts": [
     {
       "matches": [
-        "<all_urls>"
+        "*://*.atlassian.net/*"
       ],
       "js": ["content.js"],
       "run_at": "document_idle",
