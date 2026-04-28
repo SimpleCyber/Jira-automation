@@ -401,15 +401,11 @@ stopBtn.addEventListener('click', async () => {
   fillBtn.style.display = 'flex';
   stopBtn.style.display = 'none';
 
-  // Send stop directly to all frames in the active tab
-  try {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (tab) {
-      chrome.tabs.sendMessage(tab.id, { action: 'stopFilling' }, () => {
-        if (chrome.runtime.lastError) { /* ignore */ }
-      });
-    }
-  } catch (e) { /* ignore */ }
+  // Send stop broadcast to all frames via background script
+  chrome.runtime.sendMessage({
+    target: 'content',
+    action: 'stopFilling'
+  });
 
   addLog('Filling stopped by user', 'warning');
 });

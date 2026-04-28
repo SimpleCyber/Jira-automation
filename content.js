@@ -3,6 +3,9 @@
  * Interacts with Zephyr Scale test case editor (Froala rich-text editors)
  */
 
+console.log(`[JiraHelper] Content script initializing in ${window.location.host}. Depth: ${window.parent === window ? 'Top' : 'Iframe'}`);
+remoteLog(`Initialized in frame: ${window.location.href}`, 'info');
+
 let stopRequested = false;
 let isCurrentlyFilling = false;
 
@@ -192,21 +195,63 @@ function waitForRowCount(count, timeout = 10000) {
 }
 
 /**
+ * Robust check for a row element
+ */
+function isRow(el) {
+  return el && (el.classList.contains('draggable-row') || el.querySelector('[data-testid="step-fields-layout"]'));
+}
+
+/**
  * Find all step rows anywhere
  */
 function findAllRows() {
   let allRows = [];
   const searchRoot = (root) => {
-    const rows = root.querySelectorAll('.draggable-row');
-    allRows = allRows.concat(Array.from(rows));
-    const iframes = root.querySelectorAll('iframe');
-    iframes.forEach(iframe => {
+    if (!root) return;
+
+    // 1. Check for .draggable-row first in current root
+    let rowsInRoot = Array.from(root.querySelectorAll('.draggable-row'));
+    
+    // 2. Fallback: Check for data-testid layouts if no explicit rows found
+    if (rowsInRoot.length === 0) {
+      const layouts = root.querySelectorAll('[data-testid="step-fields-layout"]');
+      layouts.forEach(layout => {
+        let container = layout.parentElement;
+        while (container && container !== root && !container.classList.contains('draggable-row')) {
+           if (container.parentElement && container.parentElement.querySelector(':scope > .step-sequence')) {
+             break; 
+           }
+           container = container.parentElement;
+        }
+        if (container && !allRows.includes(container)) {
+          allRows.push(container);
+        }
+      });
+    } else {
+      // Filter out duplicates
+      rowsInRoot.forEach(r => {
+        if (!allRows.includes(r)) allRows.push(r);
+      });
+    }
+
+    // 3. RECURSIVE: Search Shadow DOMs
+    const allElements = root.querySelectorAll ? root.querySelectorAll('*') : [];
+    for (const el of allElements) {
+      if (el.shadowRoot) {
+        searchRoot(el.shadowRoot);
+      }
+    }
+
+    // 4. RECURSIVE: Search Iframes
+    const iframes = root.querySelectorAll ? root.querySelectorAll('iframe') : [];
+    for (const iframe of iframes) {
       try {
         const doc = iframe.contentDocument || iframe.contentWindow.document;
-        searchRoot(doc);
+        if (doc) searchRoot(doc);
       } catch (e) {}
-    });
+    }
   };
+
   searchRoot(document);
   return allRows;
 }
@@ -230,6 +275,8 @@ function findSaveButton(row) {
   const selectors = [
     'button[aria-label="Save"]',
     'button[data-testid="test-step-save-button"]',
+    'button[data-testid*="save"]',
+    'button[data-testid*="check"]',
     'button .css-1afrefi', // wrapper for some icons
     '.css-izvpvj button', // sometimes used for row actions
     'button span[aria-label="check"]',
@@ -271,29 +318,46 @@ function escapeHtml(str) {
  * Check if the Zephyr Scale UI (Add step button or existing rows) is present
  */
 function findAddStepButton() {
-  // 1. Data Test ID is the most reliable
-  let btn = findEverywhere('[data-testid="testcase-view-add-step-button"]');
-  if (btn) return btn;
+  // 1. Data Test IDs are the most reliable across different versions
+  const testIds = [
+    '[data-testid="testcase-view-add-step-button"]',
+    '[data-testid="test-step-add-button"]',
+    '[data-testid="add-step-button"]',
+    '[data-testid="testcase-view-add-step-below-button"]'
+  ];
 
-  // 2. Exact match by text content
-  btn = findEverywhere((root) => {
+  for (const id of testIds) {
+    const btn = findEverywhere(id);
+    if (btn) return btn;
+  }
+
+  // 2. Exact match by text content (i18n might break this but good fallback)
+  const textBtn = findEverywhere((root) => {
     const allBtns = Array.from(root.querySelectorAll('button'));
     return allBtns.find(b => {
       const txt = b.textContent.trim().toLowerCase();
       return txt === 'add step' || txt === '+ add step';
     });
   });
-  if (btn) return btn;
+  if (textBtn) return textBtn;
 
-  // 3. Fallback to latest observed class + parent container
+  // 3. Fallback to latest observed classes/containers
   return findEverywhere('.css-10oczdc.e25ffw72 button') || 
-         findEverywhere('.css-1mwn02k button.css-1l34k60');
+         findEverywhere('.css-1mwn02k button.css-1l34k60') ||
+         findEverywhere('.css-1afrefi button');
 }
 
 function detectZephyrUI() {
   const addBtn = findAddStepButton();
-  const hasRows = findEverywhere('.draggable-row');
-  return !!(addBtn || hasRows);
+  const rows = findAllRows();
+  const hasRows = rows.length > 0;
+  
+  if (addBtn || hasRows) {
+    console.log('[JiraHelper] UI Elements detected:', { addBtn: !!addBtn, rows: rows.length });
+    return true;
+  }
+  
+  return false;
 }
 
 // ==================== Froala Editor Interaction ====================
