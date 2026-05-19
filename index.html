@@ -7,391 +7,225 @@
     <meta name="description" content="Paste test scripts and auto-fill Zephyr Scale test case steps in Jira instantly.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #0052CC; /* Atlassian Blue */
-            --primary-hover: #0047B3;
-            --bg-color: #FFFFFF;
-            --bg-secondary: #F4F5F7;
-            --text-main: #172B4D;
-            --text-muted: #42526E;
-            --border-color: #DFE1E6;
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                DEFAULT: '#0052CC',
+                hover: '#0047B3',
+              },
+              main: '#172B4D',
+              muted: '#42526E',
+              borderColor: '#DFE1E6',
+              bgSecondary: '#F4F5F7',
+            },
+            fontFamily: {
+              sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+              heading: ['Plus Jakarta Sans', 'Inter', '-apple-system', 'sans-serif'],
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              }
+            }
+          }
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Glassmorphism Navbar */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 5%;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 1.25rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-main);
-            text-decoration: none;
-        }
-
-        .logo img {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-
-        .nav-cta {
-            background-color: var(--primary);
-            color: white !important;
-            padding: 0.5rem 1.25rem;
-            border-radius: 6px;
-            font-weight: 600;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-        }
-
-        .nav-cta:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
-        }
-
-        /* Hero Section */
-        header {
-            padding: 10rem 5% 6rem;
-            text-align: center;
-            background: radial-gradient(circle at 50% 0%, #E6EFFF 0%, transparent 70%);
-        }
-
-        h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.03em;
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, var(--primary) 0%, #0088FF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero-subtitle {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto 2.5rem;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.875rem 2rem;
-            border-radius: 8px;
-            font-size: 1.125rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-            box-shadow: 0 4px 14px 0 rgba(0, 82, 204, 0.39);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-            box-shadow: 0 6px 20px rgba(0, 82, 204, 0.23);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background-color: white;
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            border-color: #C1C7D0;
-            background-color: var(--bg-secondary);
-        }
-
-        /* Features Section */
-        .features {
-            padding: 5rem 5%;
-            background-color: var(--bg-secondary);
-            text-align: center;
-        }
-
-        .features h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 3rem;
-            letter-spacing: -0.02em;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 2.5rem 2rem;
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: left;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .feature-card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        /* How it works */
-        .how-it-works {
-            padding: 6rem 5%;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .how-it-works h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .step {
-            display: flex;
-            align-items: flex-start;
-            gap: 2rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .step-number {
-            flex-shrink: 0;
-            width: 48px;
-            height: 48px;
-            background-color: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-
-        .step-content h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .step-content p {
-            color: var(--text-muted);
-        }
-
-        /* Footer */
-        footer {
-            background-color: #FAFBFC;
-            border-top: 1px solid var(--border-color);
-            padding: 3rem 5%;
-            text-align: center;
-            color: var(--text-muted);
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .footer-links a {
-            color: var(--text-muted);
-            text-decoration: none;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .nav-links { display: none; }
-            .step { flex-direction: column; gap: 1rem; }
-            .footer-content { flex-direction: column; gap: 1rem; }
-        }
-
-        /* Subtle animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-fade-in {
-            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-    </style>
+      }
+    </script>
 </head>
-<body>
+<body class="font-sans bg-white text-main leading-relaxed overflow-x-hidden">
 
-    <nav>
-        <a href="index.html" class="logo">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#0052CC"/>
-                <path d="M2 17L12 22L22 17" stroke="#0052CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M2 12L12 17L22 12" stroke="#0052CC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Jira Helper
-        </a>
-        <div class="nav-links">
-            <a href="#features">Features</a>
-            <a href="#how-it-works">How it works</a>
-            <a href="privacy.html">Privacy</a>
-            <a href="https://github.com/simplecyber/jira-helper" target="_blank" class="nav-cta">Add to Chrome</a>
-        </div>
-    </nav>
-
-    <header class="animate-fade-in">
-        <h1>Supercharge your <br/><span class="gradient-text">Zephyr Scale</span> Testing</h1>
-        <p class="hero-subtitle">Stop copy-pasting individual steps. Paste your AI-generated or manually written test scripts and let the extension auto-fill your Jira test cases instantly.</p>
-        <div class="cta-buttons">
-            <a href="https://github.com/simplecyber/jira-helper" target="_blank" class="btn btn-primary">Install Extension</a>
-            <a href="#how-it-works" class="btn btn-secondary">See how it works</a>
-        </div>
-    </header>
-
-    <section id="features" class="features">
-        <h2>Why use Jira Helper?</h2>
-        <div class="feature-grid">
-            <div class="feature-card">
-                <div class="feature-icon">⚡️</div>
-                <h3>Save Countless Hours</h3>
-                <p>Stop manually creating each test step, adding test data, and expected results one by one. Automate the entire input process.</p>
+    <!-- Hero Section Wrapper with Radial Background -->
+    <div class="w-full relative" style="background: radial-gradient(circle at 50% 0%, #E6EFFF 0%, transparent 60%);">
+        
+        <!-- Transparent Navbar -->
+        <nav class="absolute top-0 left-0 w-full flex justify-between items-center py-6 px-[5%] z-[1000]">
+            <a href="index.html" class="text-xl font-bold flex items-center gap-2 text-main no-underline font-heading">
+                <img src="icons/jira.png" alt="Jira Logo" class="w-7 h-7 object-contain" />
+                Jira Helper
+            </a>
+            <div class="hidden md:flex gap-8 items-center font-heading">
+                <a href="#demo" class="text-muted font-semibold no-underline transition-colors duration-200 hover:text-primary">Watch Demo</a>
+                <a href="#features" class="text-muted font-semibold no-underline transition-colors duration-200 hover:text-primary">Features</a>
+                <a href="#how-it-works" class="text-muted font-semibold no-underline transition-colors duration-200 hover:text-primary">How it works</a>
+                <a href="privacy.html" class="text-muted font-semibold no-underline transition-colors duration-200 hover:text-primary">Privacy</a>
+                <a href="https://chromewebstore.google.com/detail/oddgkefmffmfjckbcbecjcmggmmojhnk?utm_source=item-share-cb" target="_blank" class="bg-primary text-white py-2 px-5 rounded-lg font-semibold transition-all duration-200 hover:bg-primary-hover hover:-translate-y-px no-underline shadow-md shadow-primary/20">Add to Chrome</a>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🤖</div>
-                <h3>AI-Ready Parsing</h3>
-                <p>Seamlessly parses Markdown test scripts generated by ChatGPT, Claude, or Gemini. Includes built-in prompt templates.</p>
+        </nav>
+        <!-- Hero Section -->
+        <header class="pt-32 pb-24 md:pt-40 md:pb-36 px-[5%] max-w-[1280px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center animate-fade-in">
+            
+            <!-- Hero Text (Left side on desktop) -->
+            <div class="lg:col-span-7 text-left flex flex-col items-start">
+                <!-- Feature Badge -->
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wide uppercase mb-8">
+                    <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                    Chrome Web Store Live
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-[-0.03em] leading-[1.08] text-main font-heading mb-6">
+                    Zephyr Scale Testing, <br/>
+                    <span class="bg-gradient-to-r from-primary to-[#0088FF] bg-clip-text text-transparent">Automated in Seconds</span>
+                </h1>
+                
+                <p class="text-base md:text-lg text-muted leading-relaxed mb-10 max-w-[540px]">
+                    Paste your Markdown test scripts and auto-fill your Jira test cases in Zephyr Scale instantly. No more copy-pasting individual steps.
+                </p>
+                
+                <!-- Actions -->
+                <div class="flex items-center gap-6">
+                    <a href="https://chromewebstore.google.com/detail/oddgkefmffmfjckbcbecjcmggmmojhnk?utm_source=item-share-cb" target="_blank" class="flex items-center justify-center gap-2 py-3 px-6 rounded-xl text-base font-semibold no-underline transition-all duration-200 cursor-pointer bg-primary text-white shadow-[0_8px_20px_-4px_rgba(0,82,204,0.4)] hover:bg-primary-hover hover:shadow-[0_12px_24px_rgba(0,82,204,0.3)] hover:-translate-y-0.5 active:translate-y-0 font-heading">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 0C8.21 0 4.89 1.94 2.97 4.88L7.22 12.2C7.54 11.23 8.19 10.41 9.06 9.9c.87-.51 1.88-.63 2.84-.33s1.77.96 2.27 1.83c.51.87.63 1.88.33 2.84s-.96 1.77-1.83 2.27c-.87.51-1.88.63-2.84.33a5.526 5.526 0 0 1-2.91-2.91L2.68 6.6C1.04 8.21 0 10.02 0 12c0 6.63 5.37 12 12 12s12-5.37 12-12S18.63 0 12 0zm0 17.5c-3.04 0-5.5-2.46-5.5-5.5s2.46-5.5 5.5-5.5 5.5 2.46 5.5 5.5-2.46 5.5-5.5 5.5z"/>
+                        </svg>
+                        Add to Chrome
+                    </a>
+                    <a href="#demo" class="group flex items-center gap-1.5 text-base font-semibold text-main hover:text-primary transition-colors no-underline font-heading">
+                        Watch Demo
+                        <span class="transition-transform group-hover:translate-x-1">→</span>
+                    </a>
+                </div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">📦</div>
-                <h3>Bulk Import</h3>
-                <p>Paste entire test suites with multiple steps at once. The extension systematically simulates human-like typing and clicks.</p>
+            
+            <!-- Interactive UI Preview mockup (Right side on desktop) -->
+            <div class="lg:col-span-5 relative w-full flex justify-center lg:justify-end">
+                <!-- Background glow behind mockup -->
+                <div class="absolute -inset-4 rounded-full bg-gradient-to-tr from-primary/30 to-[#0088FF]/30 blur-3xl opacity-50 -z-10 pointer-events-none"></div>
+                
+                <!-- Mockup container representing the extension UI -->
+                <div class="w-full max-w-[420px] bg-white rounded-2xl border border-borderColor shadow-2xl relative overflow-hidden text-left p-6">
+                    <!-- Mockup top bar -->
+                    <div class="flex items-center justify-between border-b border-borderColor pb-4 mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                                <img src="icons/jira.png" alt="Jira Logo" class="w-[18px] h-[18px] object-contain" />
+                            </div>
+                            <div>
+                                <div class="text-sm font-bold text-main font-heading">Jira Helper</div>
+                                <div class="text-[10px] text-muted font-medium flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Active on Jira Tab
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-[10px] bg-bgSecondary text-muted px-2 py-0.5 rounded-md font-semibold">
+                            v1.2.0
+                        </div>
+                    </div>
+                    
+                    <!-- Mockup Textarea -->
+                    <div class="mb-4">
+                        <label class="block text-[11px] font-bold text-muted uppercase tracking-wider mb-1.5 font-heading">Paste Test Script (Markdown)</label>
+                        <div class="w-full h-50 bg-bgSecondary rounded-lg border border-borderColor p-3 font-mono text-[11px] text-muted overflow-y-auto leading-relaxed select-none">
+                            <span class="text-primary font-bold"># Step 1: User Registration</span><br/>
+                            - Open registration portal (/register)<br/>
+                            - <span class="text-green-600 font-semibold">Expected:</span> Form elements load<br/>
+                            <br/>
+                            <span class="text-primary font-bold"># Step 2: Validate Email</span><br/>
+                            - Fill incorrect email pattern<br/>
+                            - Expected: Validation error is shown
+                        </div>
+                    </div>
+                    
+                    
+                    <!-- Mockup Action Buttons -->
+                    <div class="flex gap-2 font-heading">
+                        <button class="flex-1 bg-white border border-borderColor text-main font-semibold text-xs py-2.5 rounded-lg hover:bg-bgSecondary transition-colors pointer-events-none">
+                            Parse Script
+                        </button>
+                        <button class="flex-1 bg-primary text-white font-semibold text-xs py-2.5 rounded-lg flex items-center justify-center gap-1.5 shadow-md shadow-primary/20 hover:bg-primary-hover transition-all animate-pulse pointer-events-none">
+                            <span>Fill Steps</span>
+                            <span>⚡️</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Mockup Filling Status simulator -->
+                    <div class="mt-4 bg-primary/5 rounded-lg border border-primary/10 p-2.5 flex items-center justify-between text-[11px] text-primary font-medium font-heading">
+                        <div class="flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+                            Simulating typing: Step 1 of 2
+                        </div>
+                        <div class="font-bold">50%</div>
+                    </div>
+                </div>
+            </div>
+            
+        </header>
+    </div>
+
+    <!-- Demo Video Section -->
+    <section id="demo" class="py-10 px-[5%] bg-white text-center">
+        <div class="max-w-[1200px] mx-auto">
+            <h2 class="text-[2.5rem] font-bold mb-4 tracking-[-0.02em] text-[#172B4D] leading-tight">See Jira Helper in Action</h2>
+            <p class="text-[#42526E] text-lg mb-10">Watch how quickly Jira Helper auto-fills test case steps in Zephyr Scale.</p>
+            <div class="relative pb-[56.25%] h-0 overflow-hidden rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.1)] border border-[#DFE1E6] bg-black">
+                <iframe class="absolute top-0 left-0 w-full h-full border-0" src="https://www.youtube.com/embed/iud0ns9RuXE?si=YnlZLAc_INoTWrdD" title="Jira Helper Demo Video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
         </div>
     </section>
 
-    <section id="how-it-works" class="how-it-works">
-        <h2>How it works</h2>
-        <div class="step">
-            <div class="step-number">1</div>
-            <div class="step-content">
-                <h3>Open Zephyr Scale</h3>
-                <p>Navigate to your active Zephyr Scale test case in Jira and enter edit mode.</p>
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-[5%] bg-bgSecondary text-center">
+        <h2 class="text-4xl font-bold mb-12 tracking-[-0.02em]">Why use Jira Helper?</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[1200px] mx-auto">
+            <div class="bg-white py-10 px-8 rounded-2xl border border-borderColor shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg text-left">
+                <div class="text-4xl mb-4">⚡️</div>
+                <h3 class="text-xl font-semibold mb-3">Save Countless Hours</h3>
+                <p class="text-muted text-[0.95rem]">Stop manually creating each test step, adding test data, and expected results one by one. Automate the entire input process.</p>
             </div>
-        </div>
-        <div class="step">
-            <div class="step-number">2</div>
-            <div class="step-content">
-                <h3>Paste Your Script</h3>
-                <p>Click the Jira Helper extension icon, paste your Markdown test steps, and click "Parse Setup" to validate the layout.</p>
+            <div class="bg-white py-10 px-8 rounded-2xl border border-borderColor shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg text-left">
+                <div class="text-4xl mb-4">🤖</div>
+                <h3 class="text-xl font-semibold mb-3">AI-Ready Parsing</h3>
+                <p class="text-muted text-[0.95rem]">Seamlessly parses Markdown test scripts generated by ChatGPT, Claude, or Gemini. Includes built-in prompt templates.</p>
             </div>
-        </div>
-        <div class="step">
-            <div class="step-number">3</div>
-            <div class="step-content">
-                <h3>Auto-Fill Steps</h3>
-                <p>Set a custom delay (e.g., 1.0s) and hit "Fill Steps". Sit back while the extension types everything into the step-by-step editor for you.</p>
+            <div class="bg-white py-10 px-8 rounded-2xl border border-borderColor shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg text-left">
+                <div class="text-4xl mb-4">📦</div>
+                <h3 class="text-xl font-semibold mb-3">Bulk Import</h3>
+                <p class="text-muted text-[0.95rem]">Paste entire test suites with multiple steps at once. The extension systematically simulates human-like typing and clicks.</p>
             </div>
         </div>
     </section>
 
-    <footer>
-        <div class="footer-content">
+    <!-- How it works -->
+    <section id="how-it-works" class="py-24 px-[5%] max-w-[1000px] mx-auto">
+        <h2 class="text-4xl font-bold text-center mb-12">How it works</h2>
+        <div class="flex flex-col md:flex-row items-start gap-4 md:gap-8 mb-10">
+            <div class="flex-shrink-0 w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold">1</div>
+            <div class="step-content">
+                <h3 class="text-xl font-bold mb-2 mt-2 text-main">Open Zephyr Scale</h3>
+                <p class="text-muted">Navigate to your active Zephyr Scale test case in Jira and enter edit mode.</p>
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row items-start gap-4 md:gap-8 mb-10">
+            <div class="flex-shrink-0 w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold">2</div>
+            <div class="step-content">
+                <h3 class="text-xl font-bold mb-2 mt-2 text-main">Paste Your Script</h3>
+                <p class="text-muted">Click the Jira Helper extension icon, paste your Markdown test steps, and click "Parse Setup" to validate the layout.</p>
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row items-start gap-4 md:gap-8 mb-10">
+            <div class="flex-shrink-0 w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold">3</div>
+            <div class="step-content">
+                <h3 class="text-xl font-bold mb-2 mt-2 text-main">Auto-Fill Steps</h3>
+                <p class="text-muted">Set a custom delay (e.g., 1.0s) and hit "Fill Steps". Sit back while the extension types everything into the step-by-step editor for you.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#FAFBFC] border-t border-borderColor py-12 px-[5%] text-center text-muted">
+        <div class="flex flex-col md:flex-row justify-between items-center max-w-[1200px] mx-auto gap-4">
             <p>&copy; 2026 Jira Helper – Zephyr Scale Filler. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="https://github.com/simplecyber/jira-helper" target="_blank">GitHub</a>
-                <a href="privacy.html">Privacy Policy</a>
+            <div class="flex gap-6">
+                <a href="https://github.com/simplecyber/jira-helper" target="_blank" class="text-muted no-underline hover:text-primary hover:underline">GitHub</a>
+                <a href="privacy.html" class="text-muted no-underline hover:text-primary hover:underline">Privacy Policy</a>
             </div>
         </div>
     </footer>

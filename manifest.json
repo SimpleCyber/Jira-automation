@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Jira Helper – Zephyr Scale Filler",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Paste test scripts and auto-fill Zephyr Scale test case steps in Jira",
   "permissions": ["activeTab", "sidePanel", "storage", "webNavigation"],
   "host_permissions": [
